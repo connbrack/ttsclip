@@ -1,0 +1,8 @@
+Package: ttsclip
+Version: 0.0
+Architecture: all
+Essential: no
+Priority: optional
+Depends: ffmpeg
+Maintainer: Connor Brackley
+Description: A cli text reader that can read text from the command line or the clipboard. TTS handled by Amazon Poly
