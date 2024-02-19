@@ -3,7 +3,7 @@
 
 **Pre-release 0.x. Let me know if you have any problems! :)**
 
-TTSclip is designed to convert text into speech using AWS Polly. It supports reading text from the clipboard or a specified input argument. Additionally, the script offers options for verbosity, skipping replacing line breaks with spaces, and adjusting the speech tempo. It's composed of a fairly simple bash script, with some quality-of-life options.
+TTSclip is designed to convert text into speech using AWS Polly for linux desktops. It supports reading text from the clipboard or a specified input argument. Additionally, the script offers options for verbosity, skipping replacing line breaks with spaces, and adjusting the speech tempo. It's composed of a fairly simple bash script, with some quality-of-life options.
 
 Contributions welcome!
 
@@ -26,14 +26,17 @@ ttsclip [options] [text]
 The -b flag is used in cases where when copying text from a pdf, each new line is interpreted as line breaks. It's a common issue I ran into and this option can be very handy.
 
 ## Installation
+
+I have only tested this on Kubuntu currently using Kubuntu 23.10]. However as far as I know it should work on other Linux desktops.
+
 #### General
 1. Clone repository
 1. Ensure all prerequisites are met.
 1. Place the script in a desired directory.
-1. Run using ./ttsclip.sh or create alias
+1. Run using ./ttsclip.sh or create alias.
 
 
-#### For apt-based systems
+#### For systems running the apt package manager (Debian, Ubuntu ...)
 ```
 git clone https://github.com/connbrack/ttsclip.git
 cd ttsclip
@@ -41,7 +44,7 @@ make
 sudo apt install ./ttsclip.deb
 ```
 
-This code relies on aws Amazon Polly and will not work without it. To get this you will need to set up an aws account and get the cli. Following the steps here (https://docs.aws.amazon.com/polly/latest/dg/getting-started-cli.html)
+This code relies on aws Amazon Polly and will not work without it. To get this you will need to set up an aws account and get the aws cli. Following the steps here (https://docs.aws.amazon.com/polly/latest/dg/getting-started-cli.html)
 
 Please note: The Amazon Polly free tier has a word limit. Exceeding that will start to cost money. For my uses the limit and rates have been reasonable.
 
