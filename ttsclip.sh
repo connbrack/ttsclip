@@ -1,8 +1,31 @@
+# vim: set ft=bash:
 
+# ---------------- Options -----------------
+
+folder_path=$HOME/.local/share/cliptts
+aws_path=$HOME/.aws
+
+maxwords=3000
+notificationtime=1000
+
+# ---------------- Handle process -----------------
+PID_FILE="/tmp/ttsclip.pid"
+
+if [ -f $PID_FILE ]; then
+  PID=$(cat $PID_FILE)
+  if ps -p $PID > /dev/null; then
+    kill $PID
+    pkill play
+    notify-send -t $notificationtime -a "Reader" "Reading task cancelled"
+    exit 1
+  fi
+fi
+
+echo $$ > "$PID_FILE"
 
 # ---------------- Handle inputs -----------------
 print_usage() {
-  printf "Useage: "
+  printf "Usage: "
 }
 
 tempo=1
@@ -18,10 +41,9 @@ while getopts 'cbvt:' flag; do
 done
 shift $((OPTIND - 1))
 
+
 # ---------------- Setup -----------------
 
-folder_path=$HOME/.local/share/cliptts
-aws_path=$HOME/.aws
 
 if [ ! -d "$folder_path" ]; then
     mkdir -p "$folder_path"
@@ -36,11 +58,14 @@ if [ "$verbose" != "true" ]; then
  exec 1> $folder_path/output.txt 2>&1  # For debugging
 fi
 
-maxwords=3000
-notificationtime=1000
+
 
 if [ "$from_clipboard" = "true" ]; then
-  sayit=$(xclip -o -selection clipboard)
+  if [ "$XDG_SESSION_TYPE" = "wayland" ]; then
+      sayit=$(wl-paste --no-newline)
+  else
+      sayit=$(xclip -o -selection clipboard)
+  fi
 else
   sayit=$1
 fi
@@ -52,7 +77,7 @@ fi
 
 
 # ---------------- read  -----------------
-#
+
 n_words=$(echo "$sayit" | wc --chars)
 
 # Check if length of input exedes maximum length
@@ -63,10 +88,10 @@ elif (($n_words < 2 ))
 then
   notify-send -t $notificationtime -a "Reader" "Nothing to send"
 else
-  # Send notificaion
+  # Send notification
   notify-send -t $notificationtime -a "Reader" "Text sent to reader"
 
-  # Transer get mp3 using aws polly, notify if not working
+  # Transfer get mp3 using aws polly, notify if not working
   aws polly synthesize-speech --output-format mp3 --voice-id Joanna --engine neural --text "$sayit" $folder_path/temp_polly.mp3
 
   # Play
